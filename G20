@@ -1,29 +1,19 @@
 # File: dbReadFromFile.py
 # Small example to demonstrate how to read input from a CSV file and store
-# that info into the database (into the "trades10" table in "mytest" database).
-
-# Data structure (2010 data):
-#     table urban10: Country_Name Country_Code UrbanPop (in percentage point of total population: 0~100)
-#     table GDPpc10: Country_Name Country_Code GDPpc (GDP per capital in Current US $)
-#     table trades10: Country_Name Country_Code Imports Exports GDP (in current US $)
-#     table power10: Country_Name Country_Code Power (in kilowalts per capita)
-#     table employment10: Country_Name Country_Code Agriculture Industry Service (Employment ratio in each industry as total employ population)
+# that info into the database
 
 import sqlite3
 import csv
-
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Create a connection to the database.
+# Create a connection to the database
 conn = sqlite3.connect('mydatabase.db')
 
-# Create a cursor. 
+# IMPORT DATA OF URBAN POPULATION (% of total population) #
+# Create a cursor
 cursor = conn.cursor()
 
-#################################################################################
-#######Import data of urban population (% of total population)
-#################################################################################
 # Drop the table if it exists
 sql = '''drop table if exists urban10'''
 
@@ -42,12 +32,12 @@ cursor.execute(sql)
 # Output to screen so user knows what is going on
 print("Inputting the following information into the database: ")
 
-# Open a file for reading using csv.reader [See above for file contents]
-with open('UrbanPopulation.csv', 'rb') as dataFile:
+# Open a file for reading using csv.reader 
+with open ('Desktop/FinalFinal/UrbanPopulation.csv','rb') as dataFile:
     reader = csv.reader(dataFile)
     reader.next()
     for ctyInfo in reader: # for each row in reader...
-        # Find the length (i.e. how many elements in the list) (should be 3)
+        # Find the length (i.e. how many elements in the list)
         numElements = len(ctyInfo)
         print(ctyInfo)
         Country_Name = ctyInfo[0]
@@ -59,26 +49,23 @@ with open('UrbanPopulation.csv', 'rb') as dataFile:
              (:st_ct, :st_ctcd, :ub)'''
              # These values are "named parameters" (like place holders)
              # Tells the SQLite library that something will be substituted here
-    
+        
         # Use the cursor to execute the statement
-        # Here, a dictionary has been added of the named parameters and the items
-        # to be inserted.
-        cursor.execute(sql, {'st_ct':Country_Name, 'st_ctcd':Country_Code, 'ub':UrbanPop})
-    
+        # Here, a dictionary has been added for the named parameters and the items
+        # to be inserted
+        cursor.execute(sql,{'st_ct':Country_Name,'st_ctcd':Country_Code,'ub':UrbanPop})
+        
         # Commit. Telling SQLite to save the new data. The data would be lost otherwise.
         conn.commit()
-
-# Use the cursor to close the connection to the database, now that we're done.
-cursor.close()
-
-#################################################################################
-########Import data of GDP per capita (Current US $)
-#################################################################################
-
-# Create a connection to the database.
+        
+cursor.close() 
+    
+# IMPORT DATA OF GDP PER CAPITA (CURRENT US $)
+ 
+# Create a connection to the database
 conn = sqlite3.connect('mydatabase.db')
-
-# Create a cursor. 
+  
+# Create a cursor
 cursor = conn.cursor()
 
 # Drop the table if it exists
@@ -87,7 +74,7 @@ sql = '''drop table if exists GDPpc10'''
 # Use the cursor to execute the statement
 cursor.execute(sql)
 
-# Create a table called GDPpc10
+# Create a table called GDpc10
 sql = '''create table GDPpc10(
     Country_Name text,
     Country_Code text,
@@ -99,12 +86,12 @@ cursor.execute(sql)
 # Output to screen so user knows what is going on
 print("Inputting the following information into the database: ")
 
-# Open a file for reading using csv.reader [See above for file contents]
-with open('GDP_PER_CAPITA.csv', 'rb') as dataFile:
+# Open a file for reading using csv.reader
+with open('Desktop/FinalFinal/GDP_PER_CAPITA.csv','rb') as dataFile:
     reader = csv.reader(dataFile)
     reader.next()
-    for ctyInfo in reader: # for each row in reader...
-        # Find the length (i.e. how many elements in the list) (should be 3)
+    for ctyInfo in reader: # for each row in reader
+        # Find the length (number of elements in list)
         numElements = len(ctyInfo)
         print(ctyInfo)
         Country_Name = ctyInfo[0]
@@ -114,29 +101,25 @@ with open('GDP_PER_CAPITA.csv', 'rb') as dataFile:
              (Country_Name, Country_Code, GDPpc)
              values
              (:st_ct, :st_ctcd, :gpc)'''
-             # These values are "named parameters" (like place holders)
-             # Tells the SQLite library that something will be substituted here
-    
+            # These values are "named parameters"
+            # Tells the SQLite library that something will be substituted here
+        
         # Use the cursor to execute the statement
-        # Here, a dictionary has been added of the named parameters and the items
-        # to be inserted.
-        cursor.execute(sql, {'st_ct':Country_Name, 'st_ctcd':Country_Code, 'gpc':GDPpc})
-    
-        # Commit. Telling SQLite to save the new data. The data would be lost otherwise.
+        # A dictionary has been added for the named parameters and the items to be inserted
+        cursor.execute(sql,{'st_ct':Country_Name,'st_ctcd':Country_Code,'gpc':GDPpc})
+        
+        # Commit - telling SQLite to save the new data
         conn.commit()
-
-# Use the cursor to close the connection to the database, now that we're done.
+        
+# Use the cursor to close the connection to the database
 cursor.close()
-    
-    
-#########################################################################################
-#Create trades10: Country_Name, Country_Code, Imports, Exports, GDP (all in Current US $)
-#########################################################################################
 
-# Create a connection to the database.
+# Create trades10: Country_Name,Country_Code,Imports,Exports,GDP #
+
+# Create a connection to the database
 conn = sqlite3.connect('mydatabase.db')
 
-# Create a cursor. 
+# Create a cursor
 cursor = conn.cursor()
 
 # Drop the table if it exists
@@ -152,19 +135,19 @@ sql = '''create table trades10(
     Imports real,
     Exports real,
     GDP real)'''
-    
+
 # Use the cursor to execute the statement
 cursor.execute(sql)
 
 # Output to screen so user knows what is going on
 print("Inputting the following information into the database: ")
 
-# Open a file for reading using csv.reader [See above for file contents]
-with open('TradeOpenness.csv', 'rb') as dataFile:
+# Open a file for reading using csv.reader
+with open ('Desktop/FinalFinal/TradeOpenness.csv','rb') as dataFile:
     reader = csv.reader(dataFile)
     reader.next()
-    for ctyInfo in reader: # for each row in reader...
-        # Find the length (i.e. how many elements in the list) (should be 3)
+    for ctyInfo in reader: # for each row in reader
+        # Find the lenght (number of elements in the list)
         numElements = len(ctyInfo)
         print(ctyInfo)
         Country_Name = ctyInfo[0]
@@ -186,13 +169,11 @@ with open('TradeOpenness.csv', 'rb') as dataFile:
     
         # Commit. Telling SQLite to save the new data. The data would be lost otherwise.
         conn.commit()
-
-# Use the cursor to close the connection to the database, now that we're done.
-cursor.close()
     
-##############################################################################################
-#Import data of Power Consumption: Country_Name, Country_Code, Power (in kilowalts per capita)
-##############################################################################################
+# Use the cursor to close the connection to the database
+cursor.close()
+
+# Import data of power consumption: Country_Name, Country_Code, Power #
 
 # Create a connection to the database.
 conn = sqlite3.connect('mydatabase.db')
@@ -220,7 +201,7 @@ cursor.execute(sql)
 print("Inputting the following information into the database: ")
 
 # Open a file for reading using csv.reader [See above for file contents]
-with open('PowerConsumption.csv', 'rb') as dataFile:
+with open('Desktop/FinalFinal/PowerConsumption.csv', 'rb') as dataFile:
     reader = csv.reader(dataFile)
     reader.next()
     for ctyInfo in reader: # for each row in reader...
@@ -248,9 +229,7 @@ with open('PowerConsumption.csv', 'rb') as dataFile:
 # Use the cursor to close the connection to the database, now that we're done.
 cursor.close()
 
-###############################################################################
-#########  import employment.csv: Contain a check constraint as extra credit
-###############################################################################
+# Import employment.csv: contain a check constraint as extra credit
 
 # Create a connection to the database.
 conn = sqlite3.connect('mydatabase.db')
@@ -277,9 +256,8 @@ sql = '''create table employment10(
     
 cursor.execute(sql)
 
-
 #import Employment.csv into table employment
-with open('Employment.csv', 'rb') as dataFile:
+with open('Desktop/FinalFinal/Employment.csv', 'rb') as dataFile:
     reader = csv.reader(dataFile)
     reader.next()
     for ctyInfo in reader: # for each row in reader...
@@ -298,60 +276,21 @@ with open('Employment.csv', 'rb') as dataFile:
         cursor.execute(sql, {'st_ct':Country_Name, 'st_ctcd':Country_Code, 'Ar':Agriculture, 'In':Industry, 'Se':Services})  
         # Commit. Telling SQLite to save the new data. The data would be lost otherwise.
         conn.commit()
-cursor.close()        
+        
+cursor.close()  
 
+# Explore urbanization topic #
 
-#~~~~~~~~~~~~~~~~~~~~Extra credits~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#~~~~~~~~~~~~~~~~~~~~~~~~Query~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#provide an opportunity for user to add some data 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-#Since we don't find data about labor structure in South Arabia, the user can add it if they have the related data
-conn = sqlite3.connect('mydatabase.db')
-cursor = conn.cursor()
-
-print("Do you want to add the data relating to South Arabia")
-answer=raw_input("Enter y or n: ")
-
-if answer.lower() == 'y':
-   Country_Name = ('Saudi Arabia')
-   Country_Code = ('SAU')
-   Agriculture = raw_input('Employment ratio in sector agriculture: ')
-   Industry = raw_input('Employment ratio in sector industry: ')
-   Services = raw_input('Employment ratio in sector Services: ')
-   sql = '''insert into employment10
-         (Country_Name, Country_Code, Agriculture, Industry, Services )
-         values
-         (:st_ct, :st_ctcd, :Ar, :In, :Se)'''
-   cursor.execute(sql, {'st_ct':Country_Name, 'st_ctcd':Country_Code, 'Ar':Agriculture, 'In':Industry, 'Se':Services})  
-        # Commit. Telling SQLite to save the new data. The data would be lost otherwise.
-   conn.commit()
-
-# Use the cursor to close the connection to the database, now that we're done.
-cursor.close()
-
-###############################################################################
-###############################################################################
-###############################################################################
-##### explore the topic urbanization 
-###############################################################################
-###############################################################################
-###############################################################################
-
-# Create a connection to the database.
+# Create a connection to the database
 conn = sqlite3.connect('mydatabase.db')
 
-# Create a cursor. 
-cursor = conn.cursor()
+# Create a cursor
+cursor = conn.cursor()  
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-# Investigate relationship between urbanization and economic development
-# Urbanization
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query: Urbanization vs. Economic development
 
 sql = '''select Country_Name, UrbanPop from urban10
-         order by UrbanPop'''
+        order by UrbanPop'''
 
 # Use the cursor to execute the statement
 results=cursor.execute(sql)
@@ -360,20 +299,17 @@ results=cursor.execute(sql)
 urban = results.fetchall()
 
 # Bar chart for urbanization
-
-ind = np.arange(20)
+ind = np.arrange(20)
 width = 0.35
 
-p1=plt.bar(ind, zip(*urban)[1])
+p1=plt.bar(ind,zip(*urban)[1])
 plt.ylabel('Urban population as percentage of total population')
 plt.title('Urbanization of G20')
-plt.xticks(ind+width/2., zip(*urban)[0],rotation=30)
-plt.yticks(np.arange(0,110,10))
+plt.xticks(ind+width/2.,zip(*urban)[0],rotation=30)
+plt.yticks(np.arrange(0,110,10))
 plt.show()
 
-#####################
-
-# GDP per capita
+# Query: GDP per capita
 sql = '''select Country_Name, GDPpc from GDPpc10
          order by GDPpc'''
 
@@ -385,7 +321,7 @@ gdppc = results.fetchall()
 
 # Bar chart for GDP per capita to find a boundary to dividing into two groups
 
-ind = np.arange(20)
+ind = np.arange(20) 
 width = 0.35
 
 p1=plt.bar(ind, zip(*gdppc)[1])
@@ -395,9 +331,8 @@ plt.xticks(ind+width/2., zip(*gdppc)[0],rotation=30)
 plt.yticks(np.arange(0,1.1,0.1))
 plt.show()
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#create table urbanpc10 by joining two tables of urban10 and GDPpc10
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query
+# Create table urbanpc10 by joining two tables of urban10 and GDPpc10
 
 # Drop the table if it exists
 sql = '''drop table if exists urbanpc10'''
@@ -436,10 +371,9 @@ results = cursor.execute(sql)
 # Save % of urban population and GDP per capita
 urban_bot = results.fetchall()
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query
 # extract urban population of countries with top 11 GDP per capita:
 # extract set difference between the full set and the set of bottom 9
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 sql = '''select Country_Name, urbanPop, GDPpc from urbanpc10
          except
@@ -467,23 +401,15 @@ plt.legend(['Top 11', 'Bottom 9'], loc='lower right')
 
 plt.show()
 
-
-
-
-###################################################################################
-#Investigate the relationship between employment for each industry and urbanization  
-###################################################################################
+#Investigate the relationship between employment for each industry and urbanization 
 
 conn = sqlite3.connect('mydatabase.db')
 
 # Create a cursor. 
 cursor = conn.cursor()
 
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#create a table including employment for each industry and urban population
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query
+#Create a table including employment for each industry and urban population
 
 sql = '''drop table if exists em10'''
 cursor.execute(sql)
@@ -491,11 +417,9 @@ cursor.execute(sql)
 sql = '''create table em10 as select Country_name, Agriculture, Industry, Services,UrbanPop from employment10 natural join urban10'''
 cursor.execute(sql)
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#Select data from em10 sort them by UrbanPop so that we can compare 
-#urbanization and industry distribution 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query
+# Select data from em10 sort them by UrbanPop so that we can compare 
+# urbanization and industry distribution 
 
 sql='''SELECT * FROM em10 ORDER BY UrbanPop '''
 results3 = cursor.execute(sql)
@@ -520,10 +444,7 @@ plt.show()
 
 cursor.close()
 
-
-######################################################################
-##explore the relationship between power consumption and Urbanization
-######################################################################
+# Explore the relationship between power consumption and Urbanization #
 
 conn = sqlite3.connect('mydatabase.db')
 
@@ -535,10 +456,9 @@ sql = '''drop table if exists po10'''
 # Use the cursor to execute the statement
 cursor.execute(sql)
 
+# Query
+# Create a table em10 contains urban population and power consumption
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#create a table em10 contains urban population and power consumption
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 sql = '''create table po10 as select Country_Name,Industry, UrbanPop,Power from em10 natural join power10'''
 cursor.execute(sql)
 
@@ -553,15 +473,10 @@ plt.yticks(np.arange(25,90,10))
 plt.xticks(np.arange(0,17000,1000),rotation=90)
 plt.show()
 
+# Explore the relationship between Tradeopenness and Urbanization #
 
-######################################################################
-##explore the relationship between Tradeopenness and Urbanization
-######################################################################
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query
 # Create a SQL statement to print out all the trade openness in the database
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
 sql = '''select Country_Name, (Exports + Imports)/GDP AS Trade_Openness
       from trades10'''
 
@@ -574,11 +489,8 @@ results = cursor.execute(sql)
 # into a new variable, "trade_openness"
 trade_openness = results.fetchall()
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Query
 # Calculate trade openness and compare it with urbanization
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
 sql = '''select trades10.Country_Name, urban10.UrbanPop, 
         (trades10.Exports + trades10.Imports)/trades10.GDP AS Trade_Openness 
         from trades10 INNER JOIN urban10
@@ -588,14 +500,12 @@ results1 = cursor.execute(sql)
 
 urban_trade = results1.fetchall()
 
-
-# Use the cursor to close the connection to the database, now that we're done.
+# Use the cursor to close the connection to the database, now that we're done
 cursor.close()
 
 # Generate a bar chart of trade openness index
 ind = np.arange(20)
 width = 0.35
-
 p1=plt.bar(ind, zip(*trade_openness)[1])
 plt.ylabel('Trade openness')
 plt.title('Trade openness of G20')
@@ -603,9 +513,7 @@ plt.xticks(ind+width/2., zip(*trade_openness)[0],rotation=30)
 plt.yticks(np.arange(0,1.1,0.1))
 plt.show()
 
-###############################
-# Generate a scatter plot between trade openness and urbanization
-
+# Generate a scatter plot between trade openness and urbanization #
 plt.scatter(zip(*urban_trade)[2], zip(*urban_trade)[1],s=80)
 plt.xlabel('Trade openness index')
 plt.ylabel('Urban population, percentage of total population')
@@ -614,6 +522,6 @@ plt.xticks(np.arange(0.2,1.1,0.1))
 plt.yticks(np.arange(20,110,10))
 plt.show()
 
-
 # Use the cursor to close the connection to the database, now that we're done.
 cursor.close()
+
