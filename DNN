@@ -2,10 +2,6 @@
 
 # DNN example 
 
-# NOTE: after normalizing data columb by column, splitting the data into control and target groups, and creating 5 folds, 
-# I built DNN models shown below to see which one performed best and which were the optimal parameter values
-# another group member worked on the evaluation code
-
 # Best activation method
 models = h2o.deeplearning(x = 2:53,  
                           y = 54,
